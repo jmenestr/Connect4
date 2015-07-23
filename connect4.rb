@@ -1,3 +1,5 @@
+require_relative 'board'
+
 module Connect4
   class Game
     attr_accessor :game_board, :current_player, :other_player
@@ -23,7 +25,15 @@ module Connect4
         @game_board.drop_piece!(col,marker)
         @game_board.print_board
         print @game_board.get_columns
+        print "\n"
         print @game_board.get_rows
+        print "\n"
+        print @game_board.get_diagonals
+        print "\n"
+        if check_win?(marker)
+          puts "Win!"
+          break
+        end
       end
     end
 
@@ -67,16 +77,28 @@ module Connect4
           return true if in_a_row == 4
         end
       end
+      false
     end
 
-    def check_diagonal_win?
-
+    def check_diagonal_win?(marker)
+      #gets a list of all diagonals from the board and checks to see
+      # if any are a winning row
+      diagonals = @game_board.get_diagonals
+      match_marker = Proc.new {|space| space == marker}
+      diagonals.any? {|diag| diag.all?(&match_marker) }
     end
 
-    def check_win?
+    def check_win?(marker)
+      return true if check_vertical_win?(marker) or 
+                      check_horizontal_win?(marker) or 
+                      check_diagonal_win?(marker)
+
+      false
     end
-
-
 
   end
+
 end
+
+x = Connect4::Game.new
+x.play

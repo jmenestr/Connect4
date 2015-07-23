@@ -1,4 +1,3 @@
-require_relative 'connect4.rb'
 
 module Connect4
   class Board
@@ -97,7 +96,7 @@ module Connect4
         end
 
       end
-      diagonals
+      diagonals # returns arry of all diagonals
     end
 
     def get_piece(x,y)
@@ -125,5 +124,4 @@ module Connect4
   end
 end
 
-x = Connect4::Board.new
-print x.get_diagonals.length
+
