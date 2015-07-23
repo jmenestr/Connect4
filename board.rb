@@ -8,7 +8,7 @@ module Connect4
     #   handeling dropping a piece onto the gameboard
     #   printing the board
     #   returning the piece at a given location
-    attr_accessor :board
+    attr_accessor :board, :columns
     def initialize
       @rows = 6
       @columns = 7
@@ -21,11 +21,19 @@ module Connect4
 
     def is_empty?(space)
       @board[space].nil?
-
     end
 
-    def has_piece?(x,y)
 
+    def get_column(col)
+      (0...@rows).map { |row| @board[col+row*@columns]  }
+    end
+
+    def column_full?(column)
+      get_column(column).all? {|space| !space.nil?}
+    end
+
+    def full?
+      (0...@columns).all? {|column| column_full?(column)}
     end
 
     def drop_piece!(col,marker)
@@ -35,10 +43,11 @@ module Connect4
       @board[first_empty] = marker
     end
 
+
     def get_columns
       columns = []
       (0...@columns).each do |col|
-        columns << (0...@rows).map { |row| @board[col+row*@columns]  }
+        columns << get_column(col)
       end
       columns
     end

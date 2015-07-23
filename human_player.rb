@@ -7,6 +7,6 @@ module Connect4
       @computer = false
     end
 
-    attr_reader :name, :marker
+    attr_reader :name, :marker, :computer
   end
 end
