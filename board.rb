@@ -1,3 +1,5 @@
+require_relative 'connect4.rb'
+
 module Connect4
   class Board
 
@@ -37,7 +39,7 @@ module Connect4
     def get_columns
       columns = []
       (0...@columns).each do |col|
-        columns << (0...@rows).map { |row| col+row*@columns  }
+        columns << (0...@rows).map { |row| @board[col+row*@columns]  }
       end
       columns
     end
@@ -45,9 +47,57 @@ module Connect4
     def get_rows
       rows = []
       (0...@rows).each do |row|
-        rows << (0...@columns).map { |col| col+row*@columns  }
+        rows << (0...@columns).map { |col| @board[col+row*@columns]  }
       end
       rows
+    end
+
+    def get_diagonals
+            #Top Left -> Bottom Right
+      # Can't go past col 4 (3)
+      # Can't go past row 3 (2)
+      
+      diagonals = []
+      # left_right is an array of the numbers that need to be added
+      # to each space to create a diagonal from top left to bottom right
+      #   right_left is analgous for top right to bottom left
+      left_right = [0,8,16,24]
+      right_left = [0,6,12,18]
+      # Each possible winning diagonal must be able to have 4
+      # spaces. Any rows after the third do no have enough
+      # vertical space to create a connect 4 so I limit my 
+      # iternation to only those rows which can be winning 
+      (0..(@rows-4)).each do |row|
+
+        #Analagous to the rows argument, for winning diagonals
+        # from top left to bottom right must have adequate 
+        # column space to the right to support 4 columns
+        # Thus I limit my left -> right diagonals to the 
+        # first 4 columns
+        (0..(@columns-4)).each do |column|
+          diag = []
+          left_right.each do |num_added|
+            diag << get_piece(column+num_added,row)
+          end
+          diagonals << diag
+        end
+
+        #Analagous to the above argument, for winning diagonals
+        # from rop right to bottom left must have adequate 
+        # column space to the left to support 4 columns
+        # Thus I limit my right -> left diagonals to the 
+        # last 4 columns
+
+        ((@columns-4)...@columns).each do |column|
+          diag = []
+          right_left.each do |num_added|
+            diag << get_piece(column+num_added,row)
+          end
+          diagonals << diag
+        end
+
+      end
+      diagonals
     end
 
     def get_piece(x,y)
@@ -76,12 +126,4 @@ module Connect4
 end
 
 x = Connect4::Board.new
-loop do
-  puts "Make Move"
-  input = gets.chomp.split(" ")
-  col = input[0].to_i
-  marker = input[1]
-  x.drop_piece!(col,marker)
-  print x.get_rows + "\n"
-  print x.get_columns
-end
+print x.get_diagonals.length

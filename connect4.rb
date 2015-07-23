@@ -2,11 +2,11 @@ module Connect4
   class Game
     attr_accessor :game_board, :current_player, :other_player
 
-    def initialize(player1, player2)
+    def initialize
       @game_board = Board.new
-      @players = [player1,player2].shuffle #Need to make player classes
-      @current_player = @players[0]
-      @other_player = @players[1]
+      #@players = [player1,player2].shuffle #Need to make player classes
+      #@current_player = @players[0]
+      #@other_player = @players[1]
     end
 
     def switch_players!
@@ -14,29 +14,63 @@ module Connect4
     end
 
     def play
-      puts "Make Move"
-      input = gets.chomp.split(" ")
-      col = input[0].to_i
-      marker = input[1]
-      @game_board.drop_piece!(col,marker)
+      loop do
+        puts "Make Move"
+        input = gets.chomp.split(" ")
+        col = input[0].to_i
+        marker = input[1]
+           # Hardcode marker for now
+        @game_board.drop_piece!(col,marker)
+        @game_board.print_board
+        print @game_board.get_columns
+        print @game_board.get_rows
+      end
     end
 
-    def check_vertical_win?
+    def check_vertical_win?(marker)
+      #Check for Vertical win logic walkthrough
+      # 1. Get all columns from the @game_board
+      # 2. Iterate through each column
+      #   3. Iterate through each space of column
+      #   4. if space == marker 
+      #         add 1 to in_a_row int
+      #      else
+      #         reset in_a_row int to 0
+      #    check to see if in_a_row == 4
+      #    return true if yes
+      #   
+      in_a_row = 0
       colums = @game_board.get_columns
       colums.each do |column|
         column.each do |space|
-          marker = @game_board[space]
-           #checks after current player has played so                                              # we only have to check for one marker
+          if space == marker
+            in_a_row += 1
+          else
+            in_a_row = 0
+          end
+          return true if in_a_row == 4
         end
+      end
+      false
+    end
+
+    def check_horizontal_win?(marker)
+      in_a_row = 0
+      rows = @game_board.get_rows
+      rows.each do |row|
+        row.each do |space|
+          if space == marker
+            in_a_row += 1
+          else
+            in_a_row = 0
+          end
+          return true if in_a_row == 4
         end
       end
     end
 
-    def check_horizontal_win?
-      rows = @game_board.get_rows
-    end
-
     def check_diagonal_win?
+
     end
 
     def check_win?
