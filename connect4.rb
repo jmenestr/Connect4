@@ -1,14 +1,15 @@
 require_relative 'board'
+require_relative 'human_player'
 
 module Connect4
   class Game
     attr_accessor :game_board, :current_player, :other_player
 
-    def initialize
+    def initialize(player1,player2)
       @game_board = Board.new
-      #@players = [player1,player2].shuffle #Need to make player classes
-      #@current_player = @players[0]
-      #@other_player = @players[1]
+      @players = [player1,player2].shuffle #Need to make player classes
+      @current_player = @players[0]
+      @other_player = @players[1]
     end
 
     def switch_players!
@@ -17,23 +18,25 @@ module Connect4
 
     def play
       loop do
-        puts "Make Move"
+        @game_board.print_board
+        puts "Please make a move #{@current_player.name} (#{@current_player.marker})"
         input = gets.chomp.split(" ")
         col = input[0].to_i
-        marker = input[1]
+        marker = @current_player.marker
            # Hardcode marker for now
         @game_board.drop_piece!(col,marker)
-        @game_board.print_board
-        print @game_board.get_columns
-        print "\n"
-        print @game_board.get_rows
-        print "\n"
-        print @game_board.get_diagonals
-        print "\n"
+        #print @game_board.get_columns
+        #print "\n"
+        #print @game_board.get_rows
+        #print "\n"
+        #print @game_board.get_diagonals
+        #print "\n"
         if check_win?(marker)
-          puts "Win!"
+          @game_board.print_board
+          puts "#{@current_player.name} has won!"
           break
         end
+        switch_players!
       end
     end
 
@@ -100,5 +103,6 @@ module Connect4
 
 end
 
-x = Connect4::Game.new
+x = Connect4::Game.new(Connect4::HumanPlayer.new("Justin","X"),
+                       Connect4::HumanPlayer.new("Kristen","O"))
 x.play

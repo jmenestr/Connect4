@@ -4,6 +4,7 @@ module Connect4
     def initialize(name,marker)
       @marker = marker
       @name = name
+      @computer = false
     end
 
     attr_reader :name, :marker
