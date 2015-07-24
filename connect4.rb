@@ -20,7 +20,10 @@ module Connect4
     def play
       loop do
 
-        @board.print_board      
+        @board.print_board 
+       #print @board.get_all_winning_rows    
+       #print "\n"
+       #print @board.get_all_winning_columns 
         if @current_player.computer
           #Pass in current game state to computer
           puts "Computer's turn."
@@ -54,34 +57,12 @@ module Connect4
       #    check to see if in_a_row == 4
       #    return true if yes
       #   
-      in_a_row = 0
-      colums = @board.get_columns
-      colums.each do |column|
-        column.each do |space|
-          if space == player.marker
-            in_a_row += 1
-          else
-            in_a_row = 0
-          end
-          return true if in_a_row == 4
-        end
-      end
+      return true if @board.get_all_winning_columns.any? {|win| win.all?{ |space| space == player.marker}}
       false
     end
 
     def check_horizontal_win?(player)
-      in_a_row = 0
-      rows = @board.get_rows
-      rows.each do |row|
-        row.each do |space|
-          if space == player.marker
-            in_a_row += 1
-          else
-            in_a_row = 0
-          end
-          return true if in_a_row == 4
-        end
-      end
+      return true if @board.get_all_winning_rows.any? {|win| win.all?{ |space| space == player.marker}}
       false
     end
 
@@ -109,9 +90,7 @@ module Connect4
 
 end
 
-computer1 = Connect4::ComputerPlayer.new("O")
-computer2 = Connect4::ComputerPlayer.new("X")
-computer1.other_player = computer2
-computer2.other_player = computer1
-x = Connect4::Game.new(computer1,computer2)
+human1  = Connect4::HumanPlayer.new("JUstin","O")
+computer2 = Connect4::ComputerPlayer.new("X",human1)
+x = Connect4::Game.new(human1,computer2)
 x.play

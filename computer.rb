@@ -44,7 +44,7 @@ module Connect4
 
       scores = [] #array of scores
       moves = [] #array of columns to put piece in
-      return 0 if depth > 4
+      return 1 if depth > 10
 
       # Populate the scores array recursing if needed
       
@@ -56,7 +56,7 @@ module Connect4
           new_game_state.board = game.board.clone
           new_game_state.board.board = game.board.board.clone
           #puts "In COl Loop"
-          new_game_state.board.print_board
+          #new_game_state.board.print_board
           @loop += 1
           #puts @loop
 
@@ -66,11 +66,12 @@ module Connect4
           new_game_state.switch_players!
 
           scores.push minmax(new_game_state,depth)
+          # scores. push weight_score(new_game,depth)
           moves.push col
         end
       end
 
-      if game.current_player == @self
+      if game.current_player == self
         # Max calculation
         max_score_index = scores.each_with_index.max[1]
         @choice = moves[max_score_index]
@@ -90,6 +91,8 @@ module Connect4
       puts 4
       return @choice
     end
+
+
 
   end
 end

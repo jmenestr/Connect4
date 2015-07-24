@@ -108,6 +108,30 @@ module Connect4
       diagonals # returns arry of all diagonals
     end
 
+    def get_all_winning_rows
+      fours = []
+      get_rows.each do |row|
+        temp = row.clone
+        until temp.length == 3
+          fours << temp.first(4)
+          temp.shift
+        end
+      end
+      fours
+    end
+
+    def get_all_winning_columns
+      fours = []
+      get_columns.each do |column|
+        temp = column.clone
+        until temp.length == 3
+          fours << temp.first(4)
+          temp.shift
+        end
+      end
+      fours
+    end
+
     def get_piece(x,y)
       @board[x+@columns*y]
     end
